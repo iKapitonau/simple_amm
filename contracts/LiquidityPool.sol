@@ -12,7 +12,7 @@ contract LiquidityPool {
     uint public balance1;
     uint public balance2;
     uint public totalShares;
-    mapping(address => uint256) private shares;
+    mapping(address => uint256) public shares;
 
     constructor(address _token1, address _token2) {
         require(
@@ -97,12 +97,14 @@ contract LiquidityPool {
         if (_token == token1) {
             uint256 amountToSend = (balance2 * amountAfterFee) /
                 (balance1 + amountAfterFee);
+            require(amountToSend > 0, "zero output amount");
             balance1 += _amount;
             balance2 -= amountToSend;
             SafeERC20.safeTransfer(IERC20(token2), msg.sender, amountToSend);
         } else {
             uint256 amountToSend = (balance1 * amountAfterFee) /
                 (balance2 + amountAfterFee);
+            require(amountToSend > 0, "zero output amount");
             balance2 += _amount;
             balance1 -= amountToSend;
             SafeERC20.safeTransfer(IERC20(token1), msg.sender, amountToSend);
