@@ -5,14 +5,15 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "./LiquidityPool.sol";
+import "../interfaces/ILiquidityPoolFactory.sol";
 
-contract LiquidityPoolFactory is Ownable {
+contract LiquidityPoolFactory is ILiquidityPoolFactory, Ownable {
     mapping(address => mapping(address => address)) public liquidityPools;
 
     function createPool(
         address _token1,
         address _token2
-    ) public onlyOwner returns (address) {
+    ) external onlyOwner returns (address) {
         // make tokens ordered
         if (_token1 > _token2) {
             (_token1, _token2) = (_token2, _token1);
